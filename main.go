@@ -3,5 +3,5 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("Hello World")
+	fmt.Printf("Esse é o catálogo: \n%+v\n", retornaCatalogo())
 }
