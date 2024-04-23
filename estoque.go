@@ -34,7 +34,6 @@ func retornaTodoEstoque() []model.Product {
 			Image:       "https://cdn.awsli.com.br/600x450/1944/1944028/produto/237999112/img_0094-lx2njfzyca.JPG",
 		},
 	}
-	//estoque := make([]model.Product, len(catalogo))
 
 	return estoque
 }
@@ -46,12 +45,12 @@ func retornaProdutoPeloNome(nomeDoProduto string) []model.Product {
 
 	for _, produto := range produtos {
 		if produto.Name == nomeDoProduto {
-			produtosEscolhidosPeloNome = append(produtosEscolhidosPeloNome, produto) //adicionando ao sclice de produtos que correspondem ao nome específico
+			produtosEscolhidosPeloNome = append(produtosEscolhidosPeloNome, produto)
+
 		}
 	}
 
 	if len(produtosEscolhidosPeloNome) == 0 {
-		// Se nenhum produto foi encontrado com o nome especificado, retorne todos os produtos
 		return produtos
 	}
 

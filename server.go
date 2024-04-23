@@ -8,16 +8,11 @@ import (
 )
 
 func StartServer() {
-	r := mux.NewRouter()
-	r.HandleFunc("/produtos", produtosHandler).Methods("GET")
-	r.HandleFunc("/produtos/{nomeDoProduto}", produtosPorNome).Methods("GET")
+	roteador := mux.NewRouter()
+	roteador.HandleFunc("/produtos", produtosHandler).Methods("GET")
+	roteador.HandleFunc("/produtos/{nomeDoProduto}", produtosPorNome).Methods("GET")
 
-	http.ListenAndServe(":8080", r)
-
-	// http.ListenAndServe(":8080", r)
-	// http.HandleFunc("/produtos", produtosHandler)  //1 parâmetro é o endpoint que irá retornar os dados para quem chamar, 2 parâmetro é o handler em si, que pega a lista de produtos e transforma em JSON
-	// http.HandleFunc("/produtos/{nomeDoProduto}", produtosPorNome)
-	// http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", roteador)
 }
 
 func produtosHandler(writer http.ResponseWriter, request *http.Request) {
@@ -25,7 +20,6 @@ func produtosHandler(writer http.ResponseWriter, request *http.Request) {
 
 	writer.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(writer).Encode(catalogoDeProdutos)
-	// json.NewEncoder(writer).Encode(catalogoDeProdutos) // Aqui é feita a escrita do JSON a
 }
 
 func produtosPorNome(writer http.ResponseWriter, request *http.Request) {
