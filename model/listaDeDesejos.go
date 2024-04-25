@@ -2,6 +2,6 @@ package model
 
 type WishList struct {
 	ID        string
-	ProductId []string
+	ProdutoId []string
 	UserId    string
 }

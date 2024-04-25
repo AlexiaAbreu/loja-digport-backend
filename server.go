@@ -22,7 +22,7 @@ func produtosHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getProdutos(w http.ResponseWriter, r *http.Request) {
-	queryNome := r.URL.Query().Get("name")
+	queryNome := r.URL.Query().Get("nome")
 	if queryNome != "" {
 		produtosFiltradosPeloNome := retornaProdutoPeloNome(queryNome)
 		json.NewEncoder(w).Encode(produtosFiltradosPeloNome)
@@ -33,10 +33,10 @@ func getProdutos(w http.ResponseWriter, r *http.Request) {
 }
 
 func addProdutos(w http.ResponseWriter, r *http.Request) {
-	var produto model.Product
+	var produto model.Produto
 	json.NewDecoder(r.Body).Decode(&produto)
 
-	registraProduto(produto)
+	adicionaNovoProduto(produto)
 
 	w.WriteHeader(http.StatusCreated)
 }

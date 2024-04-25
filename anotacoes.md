@@ -42,7 +42,12 @@ json.NewEncoder(writer).Encode(catalogoDeProdutos)
 ````
 
 # **Considerações Aula 7**
-modificar 
+modificar os arquivos: server e estoque
+A Rafa apresentou outra maneira de ligar com as requisições de pesquisa por produto espefífico.
+
+Em estoque, excluímos a função que criava uma lista populada e fizemos uma função que adiciona novos produtos em uma lista vazia de produtos.
+
+Aprendemos um pouco sobre tratamento de erros com o uso da interface "error".
 
 
 
