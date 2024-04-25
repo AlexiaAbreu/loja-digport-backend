@@ -4,6 +4,8 @@ import (
 	"github.com/AlexiaAbreu/loja-digport-backend/model"
 )
 
+var Produtos []model.Product = []model.Product{}
+
 func retornaTodoEstoque() []model.Product {
 	estoque := []model.Product{
 		{
@@ -46,13 +48,16 @@ func retornaProdutoPeloNome(nomeDoProduto string) []model.Product {
 	for _, produto := range produtos {
 		if produto.Name == nomeDoProduto {
 			produtosEscolhidosPeloNome = append(produtosEscolhidosPeloNome, produto)
-
 		}
 	}
 
-	if len(produtosEscolhidosPeloNome) == 0 {
-		return produtos
-	}
+	//if len(produtosEscolhidosPeloNome) == 0 {
+	//	return produtos
+	//}
 
 	return produtosEscolhidosPeloNome
+}
+
+func registraProduto(novoProduto model.Product) {
+	Produtos = append(Produtos, novoProduto)
 }

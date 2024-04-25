@@ -41,6 +41,8 @@
 json.NewEncoder(writer).Encode(catalogoDeProdutos) 
 ````
 
+# **Considerações Aula 7**
+modificar 
 
 
 
