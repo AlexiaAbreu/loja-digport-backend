@@ -1,63 +1,31 @@
 package main
 
 import (
+	"errors"
+
 	"github.com/AlexiaAbreu/loja-digport-backend/model"
 )
 
-var Produtos []model.Product = []model.Product{}
+var ListaDeProdutos []model.Produto = []model.Produto{}
 
-func retornaTodoEstoque() []model.Product {
-	estoque := []model.Product{
-		{
-			ID:          "123",
-			Type:        "roupa",
-			Name:        "Blusa Social",
-			Description: "Blusa Social preta",
-			Price:       100,
-			Amount:      5,
-			Image:       "https://images.tcdn.com.br/img/img_prod/766954/calca_social_feminina_sem_bolso_113_1_20200410203252.jpg",
-		},
-		{
-			ID:          "234",
-			Type:        "roupa",
-			Name:        "Calça Social",
-			Description: "Calça Social Preta",
-			Price:       200,
-			Amount:      10,
-			Image:       "https://tfcpr5.vtexassets.com/arquivos/ids/156896-800-auto?v=638180210839570000&width=800&height=auto&aspect=true",
-		},
-		{
-			ID:          "345",
-			Type:        "Acessório",
-			Name:        "Cinto",
-			Description: "Cinto preto",
-			Price:       20,
-			Amount:      10,
-			Image:       "https://cdn.awsli.com.br/600x450/1944/1944028/produto/237999112/img_0094-lx2njfzyca.JPG",
-		},
-	}
+func retornaProdutoPeloNome(nomeDoProduto string) []model.Produto {
+	listaComProdutosFiltrados := []model.Produto{}
 
-	return estoque
-}
-
-func retornaProdutoPeloNome(nomeDoProduto string) []model.Product {
-
-	produtos := retornaTodoEstoque()
-	var produtosEscolhidosPeloNome []model.Product
-
-	for _, produto := range produtos {
-		if produto.Name == nomeDoProduto {
-			produtosEscolhidosPeloNome = append(produtosEscolhidosPeloNome, produto)
+	for _, produto := range ListaDeProdutos {
+		if produto.Nome == nomeDoProduto {
+			listaComProdutosFiltrados = append(listaComProdutosFiltrados, produto)
 		}
 	}
 
-	//if len(produtosEscolhidosPeloNome) == 0 {
-	//	return produtos
-	//}
-
-	return produtosEscolhidosPeloNome
+	return listaComProdutosFiltrados
 }
 
-func registraProduto(novoProduto model.Product) {
-	Produtos = append(Produtos, novoProduto)
+func adicionaNovoProduto(novoProduto model.Produto) error {
+	for _, produto := range ListaDeProdutos {
+		if novoProduto.ID == produto.ID {
+			return errors.New("não é possível criar novo produto. ID já existente")
+		}
+	}
+	ListaDeProdutos = append(ListaDeProdutos, novoProduto)
+	return nil // equivalente ao null do go
 }
