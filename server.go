@@ -4,30 +4,39 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/AlexiaAbreu/loja-digport-backend/model"
 )
 
 func StartServer() {
-	roteador := mux.NewRouter()
-	roteador.HandleFunc("/produtos", produtosHandler).Methods("GET")
-	roteador.HandleFunc("/produtos/{nomeDoProduto}", produtosPorNome).Methods("GET")
+	http.HandleFunc("/produtos", produtosHandler)
 
-	http.ListenAndServe(":8080", roteador)
+	http.ListenAndServe(":8080", nil)
 }
 
-func produtosHandler(writer http.ResponseWriter, request *http.Request) {
-	catalogoDeProdutos := retornaTodoEstoque()
-
-	writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(writer).Encode(catalogoDeProdutos)
+func produtosHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		getProdutos(w, r)
+	} else if r.Method == "POST" {
+		addProdutos(w, r)
+	}
 }
 
-func produtosPorNome(writer http.ResponseWriter, request *http.Request) {
-	params := mux.Vars(request)
-	nomeDoProduto := params["nomeDoProduto"]
+func getProdutos(w http.ResponseWriter, r *http.Request) {
+	queryNome := r.URL.Query().Get("nome")
+	if queryNome != "" {
+		produtosFiltradosPeloNome := retornaProdutoPeloNome(queryNome)
+		json.NewEncoder(w).Encode(produtosFiltradosPeloNome)
+	} else {
+		produtos := ListaDeProdutos
+		json.NewEncoder(w).Encode(produtos)
+	}
+}
 
-	catalogoDeProdutosEspecificos := retornaProdutoPeloNome(nomeDoProduto)
+func addProdutos(w http.ResponseWriter, r *http.Request) {
+	var produto model.Produto
+	json.NewDecoder(r.Body).Decode(&produto)
 
-	writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(writer).Encode(catalogoDeProdutosEspecificos)
+	adicionaNovoProduto(produto)
+
+	w.WriteHeader(http.StatusCreated)
 }
