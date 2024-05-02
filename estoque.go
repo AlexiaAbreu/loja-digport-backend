@@ -26,6 +26,7 @@ func adicionaNovoProduto(novoProduto model.Produto) error {
 			return errors.New("não é possível criar novo produto. ID já existente")
 		}
 	}
+
 	ListaDeProdutos = append(ListaDeProdutos, novoProduto)
 	return nil // equivalente ao null do go
 }

@@ -36,7 +36,7 @@
 	http.ListenAndServe(":8080", r)
 
 ````
-### Aqui é feita a escrita do JSON
+### Aqui é feita a escrita do JSON (a lista de produtos)
 ````
 json.NewEncoder(writer).Encode(catalogoDeProdutos) 
 ````
