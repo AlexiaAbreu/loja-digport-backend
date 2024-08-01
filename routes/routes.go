@@ -1,12 +1,13 @@
 package routes
 
-import{
+import (
 	"net/http"
 
+	"github.com/AlexiaAbreu/loja-digport-backend/tree/main/controller"
 	"github.com/gorilla/mux"
-}
+)
 
-func HandleRequests(){
+func HandleRequests() {
 	route := mux.NewRouter()
 
 	route.HandleFunc("/procutos", controller.BuscaProdutosHandler).Methods("GET")
