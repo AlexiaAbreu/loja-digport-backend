@@ -1,12 +1,12 @@
 package routes
 
-import{
+import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-}
+)
 
-func HandleRequests(){
+func HandleRequests() {
 	route := mux.NewRouter()
 
 	route.HandleFunc("/procutos", controller.BuscaProdutosHandler).Methods("GET")
