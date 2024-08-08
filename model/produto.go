@@ -1,6 +1,9 @@
 package model
 
 import (
+	"database/sql"
+	"fmt"
+
 	"github.com/AlexiaAbreu/loja-digport-backend/db"
 )
 
@@ -22,15 +25,18 @@ func BuscaTodosProdutos() []Produto {
 	db := db.ConectaBancoDados()
 
 	resultado, err := db.Query("SELECT * FROM produtos")
-	err = resultado.Scan(&id, &nome, &preco, &descricao, &imagem, &quantidade)
-	produto := Produto{}
-	produtos := []Produto{}
-
 	if err != nil {
 		panic(err.Error())
 	}
 
+	produto := Produto{}
+	produtos := []Produto{}
+
 	for resultado.Next() {
+		err = resultado.Scan(&id, &nome, &preco, &descricao, &imagem, &quantidade)
+		if err != nil {
+			panic(err.Error())
+		}
 		produto.ID = id
 		produto.Nome = nome
 		produto.Descricao = descricao
@@ -42,4 +48,28 @@ func BuscaTodosProdutos() []Produto {
 	}
 	defer db.Close()
 	return produtos
+}
+
+func BuscaProdutoPorNome(nomeDoProduto string) Produto {
+	db := db.ConectaBancoDados()
+
+	res := db.QueryRow("SELECT * FROM produtos WHERE nome = $1", nomeDoProduto)
+
+	err := res.Scan(&id, &nome, &preco, &descricao, &imagem, &quantidade)
+	if err == sql.ErrNoRows {
+		fmt.Printf("Produto não encontrado %s\n", nome)
+	} else if err != nil {
+		panic(err.Error())
+	}
+
+	var p Produto
+	p.ID = id
+	p.Nome = nome
+	p.Descricao = descricao
+	p.Preco = preco
+	p.Imagem = imagem
+	p.Quantidade = quantidade
+
+	defer db.Close()
+	return p
 }
