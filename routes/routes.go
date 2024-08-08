@@ -3,16 +3,16 @@ package routes
 import (
 	"net/http"
 
-	"github.com/AlexiaAbreu/loja-digport-backend/tree/main/controller"
+	"github.com/AlexiaAbreu/loja-digport-backend/controller"
 	"github.com/gorilla/mux"
 )
 
 func HandleRequests() {
 	route := mux.NewRouter()
 
-	route.HandleFunc("/procutos", controller.BuscaProdutosHandler).Methods("GET")
-	route.HandleFunc("/procuto", controller.BuscaProdutosPorNomeHandler).Methods("GET")
-	route.HandleFunc("/procutos", controller.CriaProdutosHandler).Methods("POST")
+	route.HandleFunc("/produtos", controller.BuscaProdutosHandler).Methods("GET")
+	route.HandleFunc("/produto", controller.BuscaProdutoPorNomeHandler).Methods("GET")
+	route.HandleFunc("/produtos", controller.CriaProdutoHandler).Methods("POST")
 
 	http.ListenAndServe(":8080", route)
 
