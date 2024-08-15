@@ -3,8 +3,10 @@ package model
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	"github.com/AlexiaAbreu/loja-digport-backend/db"
+	"github.com/google/uuid"
 )
 
 type Produto struct {
@@ -72,4 +74,42 @@ func BuscaProdutoPorNome(nomeDoProduto string) Produto {
 
 	defer db.Close()
 	return p
+}
+
+func CriaProduto(prod Produto) error {
+
+	if produtoCadastrado(prod.Nome) {
+		fmt.Println("Produto já cadastrado %s\n", prod.Nome)
+		return fmt.Errorf("Produto já cadastrado")
+	}
+
+	db := db.ConectaBancoDados()
+	id := uuid.NewString()
+	nome := prod.Nome
+	preco := prod.Preco
+	descricao := prod.Descricao
+	imagem := prod.Imagem
+	quantidade := prod.Quantidade
+
+	strInsert := "INSERT INTO produtos VALUES($1, $2, $3, $4, $5, $6)"
+
+	result, err := db.Exec(strInsert, id, nome, strconv.FormatFloat(preco, 'f', 1, 64), descricao,
+		imagem, strconv.Itoa(quantidade))
+	if err != nil {
+		panic(err.Error())
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println("Produto %s criado com sucesso (%d row affected)\n", id, rowsAffected)
+
+	defer db.Close()
+	return nil
+}
+
+func produtoCadastrado(nomeDoProduto string) bool {
+	prod := BuscaProdutoPorNome(nomeDoProduto)
+
+	return prod.Nome == nomeDoProduto
 }
