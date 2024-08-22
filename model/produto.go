@@ -79,7 +79,7 @@ func BuscaProdutoPorNome(nomeDoProduto string) Produto {
 func CriaProduto(prod Produto) error {
 
 	if produtoCadastrado(prod.Nome) {
-		fmt.Println("Produto já cadastrado %s\n", prod.Nome)
+		fmt.Printf("Produto já cadastrado %s\n", prod.Nome)
 		return fmt.Errorf("Produto já cadastrado")
 	}
 
@@ -102,7 +102,7 @@ func CriaProduto(prod Produto) error {
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Println("Produto %s criado com sucesso (%d row affected)\n", id, rowsAffected)
+	fmt.Printf("Produto %s criado com sucesso (%d row affected)", id, rowsAffected)
 
 	defer db.Close()
 	return nil
