@@ -113,3 +113,23 @@ func produtoCadastrado(nomeDoProduto string) bool {
 
 	return prod.Nome == nomeDoProduto
 }
+
+func RemoveProduto(id string) error {
+	db := db.ConectaBancoDados()
+	defer db.Close()
+
+	_, err := db.Exec("DELETE FROM PRODUTOS WHERE id = $1", id)
+
+	if err != nil {
+
+		fmt.Println("erro ao deletar")
+		return fmt.Errorf("Erro: %w", err)
+	}
+	fmt.Println("Sucesso ao deletar")
+	return nil
+
+}
+
+// func UpdateProduto(produto Produto) error {
+
+// }

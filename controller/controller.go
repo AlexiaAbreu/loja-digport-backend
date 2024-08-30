@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/AlexiaAbreu/loja-digport-backend/model"
+	"github.com/gorilla/mux"
 )
 
 func BuscaProdutosHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,4 +30,19 @@ func CriaProdutoHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusCreated)
 	}
+}
+
+func RemoveProdutoHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	err := model.RemoveProduto(id)
+
+	if err != nil {
+		userError := model.Erro{Mensagem: "ocorreu um erro ao deletar"}
+		json.NewEncoder(w).Encode(userError)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+
 }
