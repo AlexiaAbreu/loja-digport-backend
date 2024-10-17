@@ -23,6 +23,10 @@ var preco float64
 var descricao, imagem string
 var quantidade int
 
+// func AumentaPreco(produto *Produto) {
+// 	produto.Preco = produto.Preco + 3
+// }
+
 func BuscaTodosProdutos() []Produto {
 	db := db.ConectaBancoDados()
 
@@ -54,26 +58,33 @@ func BuscaTodosProdutos() []Produto {
 
 func BuscaProdutoPorNome(nomeDoProduto string) Produto {
 	db := db.ConectaBancoDados()
+	defer db.Close()
 
-	res := db.QueryRow("SELECT * FROM produtos WHERE nome = $1", nomeDoProduto)
+	res := db.QueryRow("SELECT * FROM produtos where nome = $1", nomeDoProduto)
 
 	err := res.Scan(&id, &nome, &preco, &descricao, &imagem, &quantidade)
 	if err == sql.ErrNoRows {
-		fmt.Printf("Produto não encontrado %s\n", nome)
+		fmt.Printf("Produto não encontrado %s\n", nomeDoProduto)
+
 	} else if err != nil {
 		panic(err.Error())
 	}
 
-	var p Produto
-	p.ID = id
-	p.Nome = nome
-	p.Descricao = descricao
-	p.Preco = preco
-	p.Imagem = imagem
-	p.Quantidade = quantidade
+	var produto1 = populaProduto()
 
-	defer db.Close()
-	return p
+	return produto1
+}
+
+func populaProduto() Produto {
+	var produto1 Produto
+	produto1.ID = id
+	produto1.Nome = nome
+	produto1.Descricao = descricao
+	produto1.Preco = preco
+	produto1.Imagem = imagem
+	produto1.Quantidade = quantidade
+	return produto1
+
 }
 
 func CriaProduto(prod Produto) error {
@@ -118,18 +129,47 @@ func RemoveProduto(id string) error {
 	db := db.ConectaBancoDados()
 	defer db.Close()
 
-	_, err := db.Exec("DELETE FROM PRODUTOS WHERE id = $1", id)
-
+	result, err := db.Exec("DELETE FROM produtos WHERE id = $1", id)
 	if err != nil {
-
-		fmt.Println("erro ao deletar")
-		return fmt.Errorf("Erro: %w", err)
+		panic(err.Error())
 	}
-	fmt.Println("Sucesso ao deletar")
-	return nil
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		panic(err.Error())
+	}
 
+	fmt.Println("id: ", id)
+	if rowsAffected == 0 {
+		return fmt.Errorf("produto não encontrado")
+	}
+
+	fmt.Printf("Produto %s deletado com sucesso (%d row affected)\n", id, rowsAffected)
+
+	return nil
 }
 
-// func UpdateProduto(produto Produto) error {
+func UpdateProduto(prod Produto) error {
+	db := db.ConectaBancoDados()
+	defer db.Close()
 
-// }
+	id := prod.ID
+	nome := prod.Nome
+	descricao := prod.Descricao
+
+	result, err := db.Exec("UPDATE produtos SET nome= $1, descricao= $2 where id= $3", nome, descricao, id)
+	if err != nil {
+		panic(err.Error())
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("produto não encontrado")
+	}
+
+	fmt.Printf("Produto %s atualizado com sucesso (%d row affected)\n", id, rowsAffected)
+
+	return nil
+}

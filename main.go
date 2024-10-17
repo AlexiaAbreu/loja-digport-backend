@@ -9,4 +9,10 @@ func main() {
 	db.InitDB()
 	StartServer()
 
+	// produto := model.Produto{Nome: "meia", Preco: 17.99}
+	// fmt.Println("preço", produto.Preco)
+
+	// model.AumentaPreco(&produto)
+	// fmt.Println("novo valor:", produto.Preco)
+
 }

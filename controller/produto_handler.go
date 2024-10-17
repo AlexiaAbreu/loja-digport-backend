@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/AlexiaAbreu/loja-digport-backend/model"
@@ -33,16 +34,27 @@ func CriaProdutoHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RemoveProdutoHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-	err := model.RemoveProduto(id)
-
-	if err != nil {
-		userError := model.Erro{Mensagem: "ocorreu um erro ao deletar"}
-		json.NewEncoder(w).Encode(userError)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+	id := mux.Vars(r)["id"]
+	error := model.RemoveProduto(id)
+	if error != nil {
+		fmt.Print(error)
+		w.WriteHeader(http.StatusNotFound)
+	} else {
+		w.WriteHeader(http.StatusNoContent)
 	}
-	w.WriteHeader(http.StatusNoContent)
+
+}
+
+func AtualizaProdutoHandler(w http.ResponseWriter, r *http.Request) {
+	var produto model.Produto
+	json.NewDecoder(r.Body).Decode(&produto)
+	error := model.UpdateProduto(produto)
+	if error != nil {
+		fmt.Print(error)
+		w.WriteHeader(http.StatusNotFound)
+	} else {
+		fmt.Println(produto.ID)
+		w.WriteHeader(http.StatusOK)
+	}
 
 }
